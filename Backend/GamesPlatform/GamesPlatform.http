@@ -1,0 +1,6 @@
+@hostName = localhost:5267
+
+GET {{GamesPlatform_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
