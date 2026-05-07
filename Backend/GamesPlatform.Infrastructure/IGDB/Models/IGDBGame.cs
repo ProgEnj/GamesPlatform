@@ -6,9 +6,10 @@ public class IGDBGame
    public string name { get; set; }
    public List<IGDBAlternativeName> alternative_names { get; set; }
    public string? version_title { get; set; }
-   public int CoverId { get; set; }
+   public IGDBImage cover { get; set; }
    public string summary { get; set; }
    public List<IGDBLanguageSupport> language_supports { get; set; }
+   public List<IGDBPlatform> platforms { get; set; }
    public List<IGDBGenre> genres { get; set; }
    public List<IGDBInvolvedCompany> involved_companies { get; set; }
    

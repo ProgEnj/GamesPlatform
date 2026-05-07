@@ -1,10 +1,8 @@
-using System.Text.Json.Serialization;
-
 namespace GamesPlatform.Infrastructure.IGDB.Models;
 
 public class IGDBImage
 {
-    public int image_id { get; set; }
+    public string image_id { get; set; }
     public string url { get; set; }
     
     public bool alpha_channel { get; set; }

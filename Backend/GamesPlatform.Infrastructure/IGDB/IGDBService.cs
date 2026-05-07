@@ -19,6 +19,18 @@ public class IGDBService : IIGDBService
     private readonly string ClientId;
     private readonly string ClientSecret;
 
+    private string gameQueryFields = 
+        "fields name," +
+        "alternative_names.*," +
+        "version_title," +
+        "cover.*," +
+        "summary," +
+        "platforms.*, platforms.platform_logo.*," +
+        "language_supports.*,language_supports.language.*," +
+        "genres.*," +
+        "involved_companies.*, involved_companies.company.*, involved_companies.company.logo.*," +
+        "first_release_date;";
+
     public IGDBService(IConfiguration config)
     {
         this._config = config;
@@ -29,19 +41,17 @@ public class IGDBService : IIGDBService
         this.ClientSecret = _config.GetValue<string>("IGDBCreds:ClientSecret");
     }
 
-    public async Task<T> SendRequestAsync<T>(string url, string query)
+    public async Task<List<T>> SendRequestAsync<T>(string url, string query)
     {
         await this.RefreshToken();
 
-        Console.WriteLine(AccessToken);
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         request.Content = new StringContent(query);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.AccessToken);
         request.Headers.Add("Client-ID", ClientId);
 
         var response = await this._sharedClient.SendAsync(request);
-        Console.WriteLine( (await response.Content.ReadAsStringAsync()));
-        return await response.Content.ReadFromJsonAsync<T>();
+        return await response.Content.ReadFromJsonAsync<List<T>>();
     }
 
     public async Task RefreshToken()
@@ -63,19 +73,17 @@ public class IGDBService : IIGDBService
 
         var response = await client.SendAsync(request);
         var authData = await response.Content.ReadFromJsonAsync<IGDBAuthResponseDTO>();
-        Console.WriteLine(authData.AccessToken);
-        Console.WriteLine(authData.ExpiresIn);
         this.AccessToken = authData.AccessToken;
         this.TokenExpires = DateTime.Now.AddSeconds(authData.ExpiresIn);
     }
     
-    // public async Task<IGDBGame> GetGame()
-    public void GetGame()
+    public async Task<IGDBGame> GetGame(int id)
     {
+        return (await this.SendRequestAsync<IGDBGame>("/v4/games", gameQueryFields + $"where id = {id};")).First();
     }
     
-    public async Task<IGDBGenre> GetGenre()
+    public async Task<IGDBGenre> GetGenre(int id)
     {
-        return (await this.SendRequestAsync<List<IGDBGenre>>("/v4/genres", "fields *;limit 1;")).First();
+        return (await this.SendRequestAsync<IGDBGenre>("/v4/genres", $"fields *; where id = {id}")).First();
     }
 }

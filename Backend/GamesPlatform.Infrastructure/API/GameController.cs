@@ -1,6 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
 using GamesPlatform.Infrastructure.IGDB;
-using GamesPlatform.UseCases.Features.Game.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamesPlatform.Infrastructure.API;
@@ -9,10 +7,10 @@ namespace GamesPlatform.Infrastructure.API;
 [Route("[controller]")]
 public class GameController(IIGDBService _gameService) : ControllerBase
 {
-    [HttpGet()]
-    public async Task<IActionResult> GetGameById()
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetGameById(int id)
     {
-        var result = await _gameService.GetGenre();
+        var result = await _gameService.GetGame(id);
         return Ok(result);
     }
 
