@@ -2,7 +2,7 @@
 
 - Base features (Basically copy of Backloggd)
 	- Game page
-		- View
+		- [X] View
 			- Name
 			- Alternative Names
 			- Version_Title

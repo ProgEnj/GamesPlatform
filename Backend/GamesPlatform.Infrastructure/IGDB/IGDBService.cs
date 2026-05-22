@@ -1,5 +1,8 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using GamesPlatform.Infrastructure.ErrorHandling;
+using GamesPlatform.Infrastructure.ErrorHandling.Errors;
 using GamesPlatform.Infrastructure.IGDB.DTOs;
 using GamesPlatform.Infrastructure.IGDB.Models;
 using Microsoft.Extensions.Configuration;
@@ -12,10 +15,12 @@ namespace GamesPlatform.Infrastructure.IGDB;
 // TODO: Images handling
 public class IGDBService : IIGDBService
 {
+    private IConfiguration _config;
+    
+    private HttpClient _sharedClient;
+    
     private string AccessToken { get; set; }
     private DateTime TokenExpires { get; set; }
-    private HttpClient _sharedClient;
-    private IConfiguration _config;
     private readonly string ClientId;
     private readonly string ClientSecret;
 
@@ -24,6 +29,7 @@ public class IGDBService : IIGDBService
         "alternative_names.*," +
         "version_title," +
         "cover.*," +
+        "screenshots.*," +
         "summary," +
         "platforms.*, platforms.platform_logo.*," +
         "language_supports.*,language_supports.language.*," +
@@ -43,24 +49,26 @@ public class IGDBService : IIGDBService
 
     public async Task<List<T>> SendRequestAsync<T>(string url, string query)
     {
-        await this.RefreshToken();
-
+        if (DateTime.Now > TokenExpires)
+        {
+            await GetAuthTokenAsync(); 
+        }
+        
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         request.Content = new StringContent(query);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.AccessToken);
         request.Headers.Add("Client-ID", ClientId);
 
         var response = await this._sharedClient.SendAsync(request);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            throw new Exception();
+        }
+        
         return await response.Content.ReadFromJsonAsync<List<T>>();
     }
 
-    public async Task RefreshToken()
-    {
-        if (DateTime.Now > TokenExpires)
-        {
-           await GetAuthTokenAsync(); 
-        }
-    }
     
     public async Task GetAuthTokenAsync()
     {
@@ -77,13 +85,27 @@ public class IGDBService : IIGDBService
         this.TokenExpires = DateTime.Now.AddSeconds(authData.ExpiresIn);
     }
     
-    public async Task<IGDBGame> GetGame(int id)
+    public async Task<Result<IGDBGame>> GetGame(int id)
     {
-        return (await this.SendRequestAsync<IGDBGame>("/v4/games", gameQueryFields + $"where id = {id};")).First();
+        var result = (await this.SendRequestAsync<IGDBGame>("/v4/games", gameQueryFields + $"where id = {id};")).FirstOrDefault();
+
+        if (result == null)
+        {
+            return Result.Failure<IGDBGame>(IGDBErrors.GameNotFound);
+        }
+
+        return Result.Success(result);
     }
     
-    public async Task<IGDBGenre> GetGenre(int id)
+    public async Task<Result<IGDBGenre>> GetGenre(int id)
     {
-        return (await this.SendRequestAsync<IGDBGenre>("/v4/genres", $"fields *; where id = {id}")).First();
+        var result = (await this.SendRequestAsync<IGDBGenre>("/v4/genres", $"fields *; where id = {id}")).FirstOrDefault();
+
+        if (result == null)
+        {
+            return Result.Failure<IGDBGenre>(IGDBErrors.GameNotFound);
+        }
+
+        return Result.Success(result);
     }
 }

@@ -1,6 +1,7 @@
 using GamesPlatform.Infrastructure.Authentication.DTOs;
 using GamesPlatform.Infrastructure.Authentication.Interfaces;
 using GamesPlatform.Infrastructure.ErrorHandling;
+using GamesPlatform.Infrastructure.ErrorHandling.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace GamesPlatform.Infrastructure.API.Authentication
             {
                 return BadRequest(result.Error.Message);
             }
-            if (result.Error == AuthenticationErrors.Identity)
+            if (result.Error == AuthenticationErrors.GenericError)
             {
                 return StatusCode(500, result.Error.Message);
             }

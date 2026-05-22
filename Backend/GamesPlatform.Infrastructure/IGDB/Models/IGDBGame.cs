@@ -11,6 +11,7 @@ public class IGDBGame
    public List<IGDBLanguageSupport> language_supports { get; set; }
    public List<IGDBPlatform> platforms { get; set; }
    public List<IGDBGenre> genres { get; set; }
+   public List<IGDBImage> screenshots { get; set; }
    public List<IGDBInvolvedCompany> involved_companies { get; set; }
    
    // TODO: this is Unix Time Stamp, check if need something special for that

@@ -3,6 +3,7 @@ using System.Text;
 using GamesPlatform.Infrastructure.Authentication.DTOs;
 using GamesPlatform.Infrastructure.Authentication.Interfaces;
 using GamesPlatform.Infrastructure.ErrorHandling;
+using GamesPlatform.Infrastructure.ErrorHandling.Errors;
 using GamesPlatform.Infrastructure.Persistance;
 using GamesPlatform.Infrastructure.Persistance.Identity;
 using Microsoft.AspNetCore.Authentication;
@@ -57,9 +58,9 @@ public class AuthService : IAuthService
         var newUser = new ApplicationUser(){ UserName = request.UserName, Email = request.Email};
         
         var result = await _userManager.CreateAsync(newUser, request.Password);
-        if (result == IdentityResult.Failed())
+        if (!result.Succeeded)
         {
-            return Result.Failure(AuthenticationErrors.Identity);
+            return Result.Failure(AuthenticationErrors.GenericError);
         }
        
         //await SendConfirmationEmailAsync(newUser);
@@ -71,12 +72,12 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
-            return Result<UserLoginResponseDTO>.Failure<UserLoginResponseDTO>(AuthenticationErrors.UserNotFound);
+            return Result.Failure<UserLoginResponseDTO>(AuthenticationErrors.UserNotFound);
         }
 
         if (!await _userManager.CheckPasswordAsync(user, request.Password))
         {
-            return Result<UserLoginResponseDTO>.Failure<UserLoginResponseDTO>(AuthenticationErrors.InvalidLogin);
+            return Result.Failure<UserLoginResponseDTO>(AuthenticationErrors.InvalidLogin);
         }
 
         var token = await _tokenService.GenerateAccessTokenAsync(user);
@@ -84,14 +85,18 @@ public class AuthService : IAuthService
         
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpires = DateTime.UtcNow.AddDays(30);
-        await _userManager.UpdateAsync(user);
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            return Result.Failure<UserLoginResponseDTO>(AuthenticationErrors.GenericError);
+        }
         
         var claims = new List<Claim>() { new Claim("refreshToken", refreshToken) };
         await _httpContextAccessor.HttpContext.SignInAsync(
             "refreshTokenCookie", new ClaimsPrincipal(new ClaimsIdentity(claims, "refreshToken")));
 
         var result = new UserLoginResponseDTO(user.UserName, user.Email, token, refreshToken);
-        return Result<UserLoginResponseDTO>.Success(result);
+        return Result.Success(result);
     }
 
     public async Task<Result> LogoutUserAsync()
@@ -109,7 +114,13 @@ public class AuthService : IAuthService
         }
         
         user.RefreshToken = null;
-        await _userManager.UpdateAsync(user);
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            return Result.Failure(AuthenticationErrors.GenericError);
+        }
+        
         await _httpContextAccessor.HttpContext.SignOutAsync("refreshTokenCookie");
         return Result.Success();
     }
@@ -138,11 +149,13 @@ public class AuthService : IAuthService
             return Result.Failure(AuthenticationErrors.UserNotFound);
         }
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+        var result = await _userManager.ConfirmEmailAsync(user, code);
         
-        if(await _userManager.ConfirmEmailAsync(user, code) == IdentityResult.Failed());
+        if(!result.Succeeded)
         {
             return Result.Failure(AuthenticationErrors.ConfirmationEmail);
         }
+        
         return Result.Success();
     }
 
@@ -181,7 +194,9 @@ public class AuthService : IAuthService
         }
         
         var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.ResetCode));
-        if (await _userManager.ResetPasswordAsync(user, code, request.NewPassword) == IdentityResult.Failed())
+        var result = await _userManager.ResetPasswordAsync(user, code, request.NewPassword);
+        
+        if (!result.Succeeded)
         {
             return Result.Failure(AuthenticationErrors.PasswordChange);
         }
