@@ -1,6 +1,6 @@
 using System.Text;
-using GamesPlatform.Infrastructure.Persistance;
-using GamesPlatform.Infrastructure.Persistance.Identity;
+using GamesPlatform.Application.Persistance;
+using GamesPlatform.Application.Persistance.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

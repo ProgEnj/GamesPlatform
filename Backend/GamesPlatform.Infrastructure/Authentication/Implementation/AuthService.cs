@@ -1,11 +1,11 @@
 using System.Security.Claims;
 using System.Text;
+using GamesPlatform.Application.Persistance;
+using GamesPlatform.Application.Persistance.Identity;
 using GamesPlatform.Infrastructure.Authentication.DTOs;
 using GamesPlatform.Infrastructure.Authentication.Interfaces;
 using GamesPlatform.Infrastructure.ErrorHandling;
 using GamesPlatform.Infrastructure.ErrorHandling.Errors;
-using GamesPlatform.Infrastructure.Persistance;
-using GamesPlatform.Infrastructure.Persistance.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

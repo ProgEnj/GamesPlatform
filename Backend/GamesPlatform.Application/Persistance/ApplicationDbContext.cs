@@ -1,9 +1,8 @@
-using GamesPlatform.Infrastructure.Persistance.Identity;
-using Microsoft.AspNetCore.Identity;
+using GamesPlatform.Application.Persistance.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace GamesPlatform.Infrastructure.Persistance;
+namespace GamesPlatform.Application.Persistance;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser> 
 {

@@ -1,4 +1,4 @@
-namespace GamesPlatform.UseCases.Features.Game.Interfaces;
+namespace GamesPlatform.Application.Features.Game.Interfaces;
 
 public interface IGameService
 {

@@ -1,4 +1,4 @@
-using GamesPlatform.Infrastructure.Persistance.Identity;
+using GamesPlatform.Application.Persistance.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 

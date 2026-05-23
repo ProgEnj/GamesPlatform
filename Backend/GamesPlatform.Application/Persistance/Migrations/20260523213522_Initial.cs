@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GamesPlatform.Infrastructure.Persistance.Migrations
+namespace GamesPlatform.Application.Persistance.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -158,11 +158,6 @@ namespace GamesPlatform.Infrastructure.Persistance.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "09c05847-a913-4760-b515-ce7a90db433e", null, "Admin", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

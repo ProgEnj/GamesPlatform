@@ -1,6 +1,6 @@
 using GamesPlatform.Core.Model.Game;
 
-namespace GamesPlatform.UseCases.Features.Game.DTOs;
+namespace GamesPlatform.Application.Features.Game.DTOs;
 
 public class GameDTO
 {

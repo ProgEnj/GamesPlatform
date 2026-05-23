@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamesPlatform.Core", "Games
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamesPlatform.Infrastructure", "GamesPlatform.Infrastructure\GamesPlatform.Infrastructure.csproj", "{CB156D35-7F18-456C-BB64-81FB7295CA34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamesPlatform.UseCases", "GamesPlatform.UseCases\GamesPlatform.UseCases.csproj", "{919C1923-1AF9-453F-A65C-FC50F939B1AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamesPlatform.Application", "GamesPlatform.Application\GamesPlatform.Application.csproj", "{919C1923-1AF9-453F-A65C-FC50F939B1AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

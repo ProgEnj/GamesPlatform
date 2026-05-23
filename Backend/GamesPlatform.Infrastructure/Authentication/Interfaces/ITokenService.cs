@@ -1,4 +1,4 @@
-using GamesPlatform.Infrastructure.Persistance.Identity;
+using GamesPlatform.Application.Persistance.Identity;
 
 namespace GamesPlatform.Infrastructure.Authentication.Interfaces;
 
