@@ -9,9 +9,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace GamesPlatform.Infrastructure.IGDB;
 
-// TODO: List<T> in SendRequestAsync as api always returns lists
-// TODO: Error handling
-// TODO: Filling fields for IGDBGame model
 // TODO: Images handling
 public class IGDBService : IIGDBService
 {

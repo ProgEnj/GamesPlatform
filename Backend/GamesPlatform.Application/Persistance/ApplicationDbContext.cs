@@ -1,4 +1,5 @@
 using GamesPlatform.Application.Persistance.Identity;
+using GamesPlatform.Core.Model.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,9 @@ namespace GamesPlatform.Application.Persistance;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser> 
 {
+    
+    public DbSet<UserProfile> UserProfiles { get; set; }
+    
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using GamesPlatform.Application.Features.Profile.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
 using GamesPlatform.Infrastructure.Authentication.DTOs;
@@ -26,13 +27,15 @@ public class AuthService : IAuthService
     private readonly IEmailSender<ApplicationUser> _emailSender;
     private readonly LinkGenerator _linkGenerator;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserProfile _userProfileService;
 
     private readonly string confirmEmailEndpointName = "auth/confirmemail";
     private readonly string ResetPasswordEdpointName = "auth/resetpassword";
 
     public AuthService(LinkGenerator linkGenerator, IConfiguration configuration, 
         UserManager<ApplicationUser> userManager, ITokenService tokenService, ApplicationDbContext context, 
-        IEmailSender<ApplicationUser> emailSender, RoleManager<IdentityRole> roleManager, IHttpContextAccessor httpContextAccessor)
+        IEmailSender<ApplicationUser> emailSender, RoleManager<IdentityRole> roleManager, IHttpContextAccessor httpContextAccessor,
+        IUserProfile userProfileService)
     {
         _linkGenerator = linkGenerator;
         _configuration = configuration;
@@ -42,6 +45,7 @@ public class AuthService : IAuthService
         _emailSender = emailSender;
         _roleManager = roleManager;
         _httpContextAccessor = httpContextAccessor;
+        _userProfileService = userProfileService;
     }
 
     public async Task<Result> RegisterAsync(UserRegisterRequestDTO request)
@@ -54,15 +58,17 @@ public class AuthService : IAuthService
         {
             return Result.Failure(AuthenticationErrors.UserAlreadyExist);
         }
-        
-        var newUser = new ApplicationUser(){ UserName = request.UserName, Email = request.Email};
+
+        var newUser = new ApplicationUser() { UserName = request.UserName, Email = request.Email };
         
         var result = await _userManager.CreateAsync(newUser, request.Password);
         if (!result.Succeeded)
         {
             return Result.Failure(AuthenticationErrors.GenericError);
         }
-       
+
+        await _userProfileService.CreateNewProfile(newUser);
+        
         //await SendConfirmationEmailAsync(newUser);
         return Result.Success();
     }
