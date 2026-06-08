@@ -22,13 +22,18 @@ public class UserProfileService(ApplicationDbContext _context, UserManager<Appli
       return await _context.UserProfiles.FirstOrDefaultAsync(x => x.Id == user.Id);
    }
    
-   public async Task CreateNewProfile(ApplicationUser newUser)
+   public async Task<UserProfile> CreateNewProfile(string userName)
    {
-      _context.UserProfiles.Add(new UserProfile(newUser.Id, newUser.UserName, "none"));
+      //TODO: do something with FavouriteGame field
+      var userProfile = new UserProfile(userName, "none");
+      
+      await _context.UserProfiles.AddAsync(userProfile);
       
       if ((await _context.SaveChangesAsync()) != 1)
       {
-         throw new Exception($"Failed to create user {newUser.Id}");
+         throw new Exception($"Failed to create user");
       }
+
+      return userProfile;
    }
 }

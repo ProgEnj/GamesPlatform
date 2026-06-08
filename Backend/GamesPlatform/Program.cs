@@ -38,8 +38,8 @@ builder.Services.AddSingleton<IIGDBService, IGDBService>();
 builder.Services.AddHealthChecks()
 	.AddNpgSql(configuration["ConnectionStrings:Default"], healthQuery: "select 1", name: "PostgreSQL", failureStatus: HealthStatus.Unhealthy, tags: new[] { "Feedback", "Database" });
 
-var context = builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>();
-await context.Database.MigrateAsync();
+// var context = builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>();
+// await context.Database.MigrateAsync();
 
 var app = builder.Build();
 

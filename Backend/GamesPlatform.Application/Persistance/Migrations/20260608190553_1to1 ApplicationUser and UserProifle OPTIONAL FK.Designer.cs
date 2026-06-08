@@ -3,6 +3,7 @@ using System;
 using GamesPlatform.Application.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GamesPlatform.Application.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260608190553_1to1 ApplicationUser and UserProifle OPTIONAL FK")]
+    partial class _1to1ApplicationUserandUserProifleOPTIONALFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,6 @@ namespace GamesPlatform.Application.Persistance.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("UserProfileId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -252,9 +254,7 @@ namespace GamesPlatform.Application.Persistance.Migrations
                 {
                     b.HasOne("GamesPlatform.Core.Model.User.UserProfile", "UserProfile")
                         .WithMany()
-                        .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserProfileId");
 
                     b.Navigation("UserProfile");
                 });

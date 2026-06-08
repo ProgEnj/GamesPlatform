@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Profile\DTOs\" />
       <Folder Include="Persistance\Migrations\" />
     </ItemGroup>
 

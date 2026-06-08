@@ -14,24 +14,24 @@
 			- Developers
 			- Screenshots
 			- Release date
-		- Reviews
+		- [ ] Reviews
 			- Comments
 			- Rating
-		- Likes
+		- [ ] Likes
 	- Main page
-		- Search
-		- Follow feed
+		- [ ] Search
+		- [ ] Follow feed
 	- Profile
-		- pfp picture
-		- Follows
-		- Game lists
-		- Notifications
+		- [ ] pfp picture
+		- [ ] Follows
+		- [ ] Game lists
+		- [ ] Notifications
 			- New like
 			- New comment
 	
 
 Additional features
-	- Recommend unpopular/old games (called "blow")
-	  tracking of pages which last visit was more than 30 days and display it in separate section
-	- feed of upcoming releases (possible realtime Pog)
-	- Recently trending
+- Recommend unpopular/old games (called "blow")
+  tracking of pages which last visit was more than 30 days and display it in separate section
+- feed of upcoming releases (possible realtime Pog)
+- Recently trending

@@ -54,20 +54,21 @@ public class AuthService : IAuthService
         {
             return Result.Failure(AuthenticationErrors.UserAlreadyExist);
         }
+
         if (await _userManager.FindByNameAsync(request.UserName) != null)
         {
             return Result.Failure(AuthenticationErrors.UserAlreadyExist);
         }
 
-        var newUser = new ApplicationUser() { UserName = request.UserName, Email = request.Email };
+        var userProfile = await _userProfileService.CreateNewProfile(request.UserName);
+
+        var result = await _userManager.CreateAsync(new ApplicationUser(){UserName = request.UserName, 
+            Email = request.Email, UserProfile = userProfile}, request.Password);
         
-        var result = await _userManager.CreateAsync(newUser, request.Password);
         if (!result.Succeeded)
         {
             return Result.Failure(AuthenticationErrors.GenericError);
         }
-
-        await _userProfileService.CreateNewProfile(newUser);
         
         //await SendConfirmationEmailAsync(newUser);
         return Result.Success();
