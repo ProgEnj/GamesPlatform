@@ -1,12 +1,12 @@
 using System.Security.Claims;
 using System.Text;
+using GamesPlatform.Application.ErrorHandling;
+using GamesPlatform.Application.ErrorHandling.Errors;
 using GamesPlatform.Application.Features.Profile.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
 using GamesPlatform.Infrastructure.Authentication.DTOs;
 using GamesPlatform.Infrastructure.Authentication.Interfaces;
-using GamesPlatform.Infrastructure.ErrorHandling;
-using GamesPlatform.Infrastructure.ErrorHandling.Errors;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +27,7 @@ public class AuthService : IAuthService
     private readonly IEmailSender<ApplicationUser> _emailSender;
     private readonly LinkGenerator _linkGenerator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserProfile _userProfileService;
+    private readonly IUserProfileService _userProfileServiceService;
 
     private readonly string confirmEmailEndpointName = "auth/confirmemail";
     private readonly string ResetPasswordEdpointName = "auth/resetpassword";
@@ -35,7 +35,7 @@ public class AuthService : IAuthService
     public AuthService(LinkGenerator linkGenerator, IConfiguration configuration, 
         UserManager<ApplicationUser> userManager, ITokenService tokenService, ApplicationDbContext context, 
         IEmailSender<ApplicationUser> emailSender, RoleManager<IdentityRole> roleManager, IHttpContextAccessor httpContextAccessor,
-        IUserProfile userProfileService)
+        IUserProfileService userProfileServiceService)
     {
         _linkGenerator = linkGenerator;
         _configuration = configuration;
@@ -45,7 +45,7 @@ public class AuthService : IAuthService
         _emailSender = emailSender;
         _roleManager = roleManager;
         _httpContextAccessor = httpContextAccessor;
-        _userProfileService = userProfileService;
+        _userProfileServiceService = userProfileServiceService;
     }
 
     public async Task<Result> RegisterAsync(UserRegisterRequestDTO request)
@@ -60,7 +60,7 @@ public class AuthService : IAuthService
             return Result.Failure(AuthenticationErrors.UserAlreadyExist);
         }
 
-        var userProfile = await _userProfileService.CreateNewProfile(request.UserName);
+        var userProfile = await _userProfileServiceService.CreateNewProfileAsync(request.UserName);
 
         var result = await _userManager.CreateAsync(new ApplicationUser(){UserName = request.UserName, 
             Email = request.Email, UserProfile = userProfile}, request.Password);

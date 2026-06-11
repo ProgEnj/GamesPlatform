@@ -1,4 +1,4 @@
-using GamesPlatform.Core.Model.Game;
+using GamesPlatform.Core.Model;
 
 namespace GamesPlatform.Application.Features.Game.DTOs;
 

@@ -1,6 +1,6 @@
+using GamesPlatform.Application.ErrorHandling.Errors;
 using GamesPlatform.Infrastructure.Authentication.DTOs;
 using GamesPlatform.Infrastructure.Authentication.Interfaces;
-using GamesPlatform.Infrastructure.ErrorHandling.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

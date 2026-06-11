@@ -1,4 +1,4 @@
-namespace GamesPlatform.Infrastructure.ErrorHandling.Errors;
+namespace GamesPlatform.Application.ErrorHandling.Errors;
 
 public static class AuthenticationErrors
 {

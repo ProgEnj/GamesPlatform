@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using GamesPlatform.Infrastructure.ErrorHandling;
-using GamesPlatform.Infrastructure.ErrorHandling.Errors;
+using GamesPlatform.Application.ErrorHandling;
+using GamesPlatform.Application.ErrorHandling.Errors;
 using GamesPlatform.Infrastructure.IGDB.DTOs;
 using GamesPlatform.Infrastructure.IGDB.Models;
 using Microsoft.Extensions.Configuration;
@@ -82,7 +82,7 @@ public class IGDBService : IIGDBService
         this.TokenExpires = DateTime.Now.AddSeconds(authData.ExpiresIn);
     }
     
-    public async Task<Result<IGDBGame>> GetGame(int id)
+    public async Task<Result<IGDBGame>> GetGameAsync(int id)
     {
         var result = (await this.SendRequestAsync<IGDBGame>("/v4/games", gameQueryFields + $"where id = {id};")).FirstOrDefault();
 
@@ -94,7 +94,7 @@ public class IGDBService : IIGDBService
         return Result.Success(result);
     }
     
-    public async Task<Result<IGDBGenre>> GetGenre(int id)
+    public async Task<Result<IGDBGenre>> GetGenreAsync(int id)
     {
         var result = (await this.SendRequestAsync<IGDBGenre>("/v4/genres", $"fields *; where id = {id}")).FirstOrDefault();
 

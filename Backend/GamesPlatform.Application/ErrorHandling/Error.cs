@@ -1,4 +1,4 @@
-namespace GamesPlatform.Infrastructure.ErrorHandling;
+namespace GamesPlatform.Application.ErrorHandling;
 
 public class Error : IEquatable<Error>
 {

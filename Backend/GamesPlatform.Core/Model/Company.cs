@@ -1,4 +1,4 @@
-namespace GamesPlatform.Core.Model.Game;
+namespace GamesPlatform.Core.Model;
 
 public class Company
 {

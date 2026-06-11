@@ -9,6 +9,8 @@ using GamesPlatform.Application.Features.Game.Implementation;
 using GamesPlatform.Application.Features.Game.Interfaces;
 using GamesPlatform.Application.Features.Profile.Implementation;
 using GamesPlatform.Application.Features.Profile.Interfaces;
+using GamesPlatform.Application.Features.Reviews.Implementation;
+using GamesPlatform.Application.Features.Reviews.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +34,8 @@ builder.Services.AddScoped<IEmailSender<ApplicationUser>, EmailSenderDummy>();
 
 // TODO: Add with extention method per feature
 builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddScoped<IUserProfile, UserProfileService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileServiceService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddSingleton<IIGDBService, IGDBService>();
 
 builder.Services.AddHealthChecks()

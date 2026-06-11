@@ -1,3 +1,5 @@
+using GamesPlatform.Core.Model.Reviews;
+
 namespace GamesPlatform.Core.Model.User;
 
 public class UserProfile
@@ -5,6 +7,7 @@ public class UserProfile
     public string Id { get; set; } 
     public string ProfileName { get; set; } 
     public string FavouriteGame { get; set; }
+    public List<Review>? UserReviews { get; set; }
     // TODO: Profile picture
     
     public UserProfile(string profileName, string favouriteGame)
