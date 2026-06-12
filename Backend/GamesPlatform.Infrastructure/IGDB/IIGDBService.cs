@@ -1,5 +1,4 @@
 using GamesPlatform.Application.ErrorHandling;
-using GamesPlatform.Infrastructure.ErrorHandling;
 using GamesPlatform.Infrastructure.IGDB.Models;
 
 namespace GamesPlatform.Infrastructure.IGDB;

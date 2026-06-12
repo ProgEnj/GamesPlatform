@@ -1,4 +1,5 @@
 using GamesPlatform.Application.ErrorHandling;
+using GamesPlatform.Application.ErrorHandling.Errors;
 using GamesPlatform.Application.Features.Game.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Core.Model;
@@ -15,7 +16,7 @@ public class GameService(ApplicationDbContext _context) : IGameService
          await _context.AddAsync(new DomainGame(igdbId));
          if ((await _context.SaveChangesAsync()) != 1)
          {
-            return Result.Failure(new Error("Failed to create DomainGame"));
+            return Result.Failure(GameErrors.FailedToCreateGame);
          }
       }
 
@@ -27,6 +28,6 @@ public class GameService(ApplicationDbContext _context) : IGameService
       var game = await _context.Games.FirstOrDefaultAsync(x => x.Id == gameId);
 
       return game == null ? 
-         Result.Failure<DomainGame>(new Error("Game not found")) : game;
+         Result.Failure<DomainGame>(GameErrors.GameNotFound) : game;
    }
 }

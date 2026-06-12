@@ -34,7 +34,7 @@ builder.Services.AddScoped<IEmailSender<ApplicationUser>, EmailSenderDummy>();
 
 // TODO: Add with extention method per feature
 builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddScoped<IUserProfileService, UserProfileServiceService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddSingleton<IIGDBService, IGDBService>();
 

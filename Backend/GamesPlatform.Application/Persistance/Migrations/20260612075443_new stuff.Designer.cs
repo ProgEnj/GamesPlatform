@@ -3,6 +3,7 @@ using System;
 using GamesPlatform.Application.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GamesPlatform.Application.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260612075443_new stuff")]
+    partial class newstuff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,6 +120,7 @@ namespace GamesPlatform.Application.Persistance.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("AuthorId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CommentId")
@@ -126,6 +130,7 @@ namespace GamesPlatform.Application.Persistance.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("ReviewId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Text")
@@ -143,7 +148,7 @@ namespace GamesPlatform.Application.Persistance.Migrations
 
                     b.HasIndex("ReviewId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("GamesPlatform.Core.Model.Reviews.Review", b =>
@@ -342,7 +347,9 @@ namespace GamesPlatform.Application.Persistance.Migrations
                 {
                     b.HasOne("GamesPlatform.Core.Model.User.UserProfile", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("GamesPlatform.Core.Model.Reviews.Comment", null)
                         .WithMany("Comments")
@@ -350,7 +357,9 @@ namespace GamesPlatform.Application.Persistance.Migrations
 
                     b.HasOne("GamesPlatform.Core.Model.Reviews.Review", "Review")
                         .WithMany("Comments")
-                        .HasForeignKey("ReviewId");
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
 

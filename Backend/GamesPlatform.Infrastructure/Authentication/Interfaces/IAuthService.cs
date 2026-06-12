@@ -1,7 +1,6 @@
 using GamesPlatform.Application.ErrorHandling;
 using GamesPlatform.Application.Persistance.Identity;
 using GamesPlatform.Infrastructure.Authentication.DTOs;
-using GamesPlatform.Infrastructure.ErrorHandling;
 
 namespace GamesPlatform.Infrastructure.Authentication.Interfaces;
 

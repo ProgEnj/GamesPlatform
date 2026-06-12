@@ -22,7 +22,8 @@ public class DomainGame
     // TODO: This is waiting until images implementation
     // public int CoverId { get; set; } 
    
-
+    protected DomainGame() {}
+        
     public DomainGame(int igdbId)
     {
         Id = Guid.NewGuid().ToString();

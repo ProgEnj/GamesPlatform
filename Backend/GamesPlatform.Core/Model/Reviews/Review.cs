@@ -12,6 +12,8 @@ public class Review
     public DomainGame DomainGame { get; set; }
     public List<Comment>? Comments { get; set; }
 
+    protected Review(){}
+    
     public Review(string text, UserProfile author, DomainGame domainGame)
     {
         Id = Guid.NewGuid().ToString();

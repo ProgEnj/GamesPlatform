@@ -24,7 +24,7 @@ public class GameController(IIGDBService _igdbGameService, IGameService _gameSer
         return Ok(result);
     }
 
-    [HttpPost("{id}")]
+    [HttpPost("{id}/review")]
     public async Task<IActionResult> PostReview([FromRoute] int id, CreateReviewRequestDTO review)
     {
         
@@ -39,10 +39,12 @@ public class GameController(IIGDBService _igdbGameService, IGameService _gameSer
     }
     
     //TODO: make uri not by id but by game name
+    //TODO: pagination
     [HttpGet("{id}/reviews")]
-    public async Task<IActionResult> GetGameReivews(int id)
+    public async Task<IActionResult> GetAllGameReivews(int id)
     {
-        
+        var reviews = await _reviewService.GetAllGameReviewsAsync(id);
+
+        return reviews.IsSuccess ? Ok(reviews) : NotFound(reviews.Error.Message);
     }
-    
 }

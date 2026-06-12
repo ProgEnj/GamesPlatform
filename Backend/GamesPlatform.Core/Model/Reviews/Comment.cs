@@ -11,7 +11,9 @@ public class Comment
     public UserProfile Author { get; set; }
     public Review Review { get; set; }
     public List<Comment>? Comments { get; set; }
-
+    
+    protected Comment(){}
+    
     public Comment(string text, UserProfile author, Review review)
     {
         Id = Guid.NewGuid().ToString();

@@ -63,7 +63,7 @@ public class AuthService : IAuthService
         var userProfile = await _userProfileServiceService.CreateNewProfileAsync(request.UserName);
 
         var result = await _userManager.CreateAsync(new ApplicationUser(){UserName = request.UserName, 
-            Email = request.Email, UserProfile = userProfile}, request.Password);
+            Email = request.Email, UserProfile = userProfile.Value}, request.Password);
         
         if (!result.Succeeded)
         {
