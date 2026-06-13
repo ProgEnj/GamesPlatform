@@ -16,7 +16,7 @@ public class ReviewService(ApplicationDbContext _context,
     public async Task<Result> CreateReviewAsync(int gameId, CreateReviewRequestDTO review)
     {
         var userProifle = await _userProfileService.GetProfileByIdAsync(review.UserId);
-        var game = await _gameService.GetGameByIdAsync(review.GameId);
+        var game = await _gameService.GetGameByIgdbIdAsync(review.GameId);
         
         _context.Add(new Review(review.Text, userProifle.Value, game.Value));
         if ((await _context.SaveChangesAsync()) != 1)
@@ -29,10 +29,12 @@ public class ReviewService(ApplicationDbContext _context,
 
     public async Task<Result<List<Review>>> GetAllGameReviewsAsync(int gameId)
     {
+        // doing get game refactoring
+        await _gameService.GetGameByIgdbIdAsync(gameId);
         var reviews = await _context.Reviews.Where(x => x.DomainGame.IGDBid == gameId).ToListAsync();
         
         if (reviews.Count() == 0)
-            return new Result<List<Review>>(new(), false, GameErrors.GameNotFound);
+            return new Result<List<Review>>(new(), false, ReviewErrors.NoReviewsForTheGame);
 
         return reviews;
     }

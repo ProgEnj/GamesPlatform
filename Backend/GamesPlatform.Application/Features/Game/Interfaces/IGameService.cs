@@ -6,5 +6,6 @@ namespace GamesPlatform.Application.Features.Game.Interfaces;
 public interface IGameService
 {
     public Task<Result> CreateGameAsync(int igdbId);
-    public Task<Result<DomainGame>> GetGameByIdAsync(string gameId);
+    public Task<Result<DomainGame>> GetGameByIgdbIdAsync(int igdbId);
+    public Task<Result<DomainGame>> GetGameByDomainIdAsync(string domainGameId);
 }

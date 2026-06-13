@@ -23,9 +23,17 @@ public class GameService(ApplicationDbContext _context) : IGameService
       return Result.Success();
    }
 
-   public async Task<Result<DomainGame>> GetGameByIdAsync(string gameId)
+   public async Task<Result<DomainGame>> GetGameByIgdbIdAsync(int igdbId)
    {
-      var game = await _context.Games.FirstOrDefaultAsync(x => x.Id == gameId);
+      var game = await _context.Games.FirstOrDefaultAsync(x => x.IGDBid == igdbId);
+
+      return game == null ? 
+         Result.Failure<DomainGame>(GameErrors.GameNotFound) : game;
+   }
+   
+   public async Task<Result<DomainGame>> GetGameByDomainIdAsync(string domainGameId)
+   {
+      var game = await _context.Games.FirstOrDefaultAsync(x => x.Id == domainGameId);
 
       return game == null ? 
          Result.Failure<DomainGame>(GameErrors.GameNotFound) : game;
