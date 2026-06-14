@@ -14,6 +14,7 @@ using GamesPlatform.Application.Features.Reviews.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -26,7 +27,21 @@ builder.Services.AddAuthentication(configuration);
 builder.Services.AddAuthorization(configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// TODO: Separate extention method
+builder.Services.AddSwaggerGen(o =>
+{
+	o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		Type = SecuritySchemeType.Http,
+		Scheme = "bearer",
+		BearerFormat = "JWT",
+		Name = "Authorization"
+	});
+	o.AddSecurityRequirement(x => new OpenApiSecurityRequirement()
+	{
+		[new OpenApiSecuritySchemeReference("Bearer", x)] = []
+	});
+});
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -57,6 +72,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/api/health");
-app.MapSwagger();
+//app.MapSwagger();
 
 app.Run();
