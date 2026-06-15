@@ -220,7 +220,7 @@ public class AuthService : IAuthService
             return Result.Failure<string>(AuthenticationErrors.WrongToken);
         }
         
-        var user = await _userManager.Users.FirstAsync(u => u.RefreshToken == refreshToken);
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
         if (user == null)
         {
             return Result.Failure<string>(AuthenticationErrors.UserNotFound);
