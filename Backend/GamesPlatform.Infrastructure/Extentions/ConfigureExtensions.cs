@@ -55,6 +55,9 @@ public static class ConfigureExtension
             {
                 o.Cookie.Name = AuthConstants.RefreshTokenClaim;
                 o.Cookie.HttpOnly = true;
+                
+                // For local dev keep it http
+                // o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 o.Cookie.SameSite = SameSiteMode.Strict;
                 o.Cookie.Path = "auth/refreshaccess";
                 o.ExpireTimeSpan = TimeSpan.FromDays(30);

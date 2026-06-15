@@ -29,8 +29,8 @@ public class TokenService : ITokenService
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var claims = new List<Claim>()
         {
-            new Claim("email", user.Email),
-            new Claim("username", user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.UserName),
         };
         
         var roles = await _userManager.GetRolesAsync(user);

@@ -103,7 +103,7 @@ public class AuthService : IAuthService
             AuthConstants.RefreshTokenCookieScheme, new ClaimsPrincipal(new ClaimsIdentity(claims, 
                 AuthConstants.RefreshTokenClaim)));
 
-        var result = new UserLoginResponseDTO(user.UserName, user.Email, token, refreshToken);
+        var result = new UserLoginResponseDTO(user.UserName, user.Email, token);
         return Result.Success(result);
     }
 
