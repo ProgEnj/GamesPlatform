@@ -1,10 +1,7 @@
-using System.Security.Claims;
 using System.Text;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
 using GamesPlatform.Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -34,8 +31,8 @@ public static class ConfigureExtension
         services.AddAuthentication(o =>
             {
                 o.RequireAuthenticatedSignIn = false;
-                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultScheme = AuthConstants.JwtTokenScheme;
+                o.DefaultChallengeScheme = AuthConstants.JwtTokenScheme;
             })
             .AddJwtBearer(AuthConstants.JwtTokenScheme, o =>
             {
@@ -68,13 +65,6 @@ public static class ConfigureExtension
     {
         services.AddAuthorization(o =>
         {
-            o.DefaultPolicy = new AuthorizationPolicyBuilder()
-                .AddAuthenticationSchemes(AuthConstants.JwtTokenScheme, AuthConstants.RefreshTokenCookieScheme)
-                .RequireAuthenticatedUser()
-                .RequireClaim(AuthConstants.RefreshTokenClaim)
-                .RequireClaim("iss")
-                .Build();
-            
             o.AddPolicy(AuthConstants.AdminPolicy, 
                 policy => policy.RequireRole(AuthConstants.AdminRole));
         });

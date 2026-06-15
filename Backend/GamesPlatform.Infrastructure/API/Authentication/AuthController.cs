@@ -117,7 +117,7 @@ namespace GamesPlatform.Infrastructure.API.Authentication
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "RefreshTokenCookie")]
         public async Task<IActionResult> RefreshAccess()
         {
             var result = await _authService.RefreshAccessTokenAsync();
