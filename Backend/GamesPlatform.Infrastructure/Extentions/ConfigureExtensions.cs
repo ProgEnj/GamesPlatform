@@ -1,7 +1,10 @@
+using System.Security.Claims;
 using System.Text;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
+using GamesPlatform.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +15,7 @@ namespace GamesPlatform.Infrastructure.Extentions;
 
 public static class ConfigureExtension
 {
+    
     public static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddIdentityCore<ApplicationUser>(o =>
@@ -33,7 +37,7 @@ public static class ConfigureExtension
                 o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(o =>
+            .AddJwtBearer(AuthConstants.JwtTokenScheme, o =>
             {
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -47,9 +51,9 @@ public static class ConfigureExtension
                     ValidateIssuerSigningKey = true
                 };
             })
-            .AddCookie("refreshTokenCookie", o =>
+            .AddCookie(AuthConstants.RefreshTokenCookieScheme, o =>
             {
-                o.Cookie.Name = "refreshToken";
+                o.Cookie.Name = AuthConstants.RefreshTokenClaim;
                 o.Cookie.HttpOnly = true;
                 o.Cookie.SameSite = SameSiteMode.Strict;
                 o.Cookie.Path = "auth/refreshaccess";
@@ -61,8 +65,15 @@ public static class ConfigureExtension
     {
         services.AddAuthorization(o =>
         {
-            o.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-            o.AddPolicy("RefreshTokenPolicy", policy => policy.RequireClaim("refreshToken"));
+            o.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(AuthConstants.JwtTokenScheme, AuthConstants.RefreshTokenCookieScheme)
+                .RequireAuthenticatedUser()
+                .RequireClaim(AuthConstants.RefreshTokenClaim)
+                .RequireClaim("iss")
+                .Build();
+            
+            o.AddPolicy(AuthConstants.AdminPolicy, 
+                policy => policy.RequireRole(AuthConstants.AdminRole));
         });
     }
 }

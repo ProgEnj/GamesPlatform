@@ -98,9 +98,10 @@ public class AuthService : IAuthService
             return Result.Failure<UserLoginResponseDTO>(AuthenticationErrors.GenericError);
         }
         
-        var claims = new List<Claim>() { new Claim("refreshToken", refreshToken) };
+        var claims = new List<Claim>() { new Claim(AuthConstants.RefreshTokenClaim, refreshToken) };
         await _httpContextAccessor.HttpContext.SignInAsync(
-            "refreshTokenCookie", new ClaimsPrincipal(new ClaimsIdentity(claims, "refreshToken")));
+            AuthConstants.RefreshTokenCookieScheme, new ClaimsPrincipal(new ClaimsIdentity(claims, 
+                AuthConstants.RefreshTokenClaim)));
 
         var result = new UserLoginResponseDTO(user.UserName, user.Email, token, refreshToken);
         return Result.Success(result);
@@ -108,7 +109,7 @@ public class AuthService : IAuthService
 
     public async Task<Result> LogoutUserAsync()
     {
-        string? refreshToken = _httpContextAccessor.HttpContext.User.FindFirstValue("refreshToken");
+        string? refreshToken = _httpContextAccessor.HttpContext.User.FindFirstValue(AuthConstants.RefreshTokenClaim);
         if(refreshToken == null)
         {
             return Result.Failure(AuthenticationErrors.WrongToken);
@@ -128,7 +129,7 @@ public class AuthService : IAuthService
             return Result.Failure(AuthenticationErrors.GenericError);
         }
         
-        await _httpContextAccessor.HttpContext.SignOutAsync("refreshTokenCookie");
+        await _httpContextAccessor.HttpContext.SignOutAsync(AuthConstants.RefreshTokenCookieScheme);
         return Result.Success();
     }
 
@@ -214,7 +215,7 @@ public class AuthService : IAuthService
 
     public async Task<Result<string>> RefreshAccessTokenAsync()
     {
-        string? refreshToken = _httpContextAccessor.HttpContext.User.FindFirstValue("refreshToken");
+        string? refreshToken = _httpContextAccessor.HttpContext.User.FindFirstValue(AuthConstants.RefreshTokenClaim);
         if(refreshToken == null)
         {
             return Result.Failure<string>(AuthenticationErrors.WrongToken);
