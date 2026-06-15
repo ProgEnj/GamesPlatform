@@ -6,6 +6,6 @@ namespace GamesPlatform.Application.Features.Reviews.Interfaces;
 
 public interface IReviewService
 {
-    public Task<Result> CreateReviewAsync(int gameId, CreateReviewRequestDTO review);
-    public Task<Result<List<Review>>> GetAllGameReviewsAsync(int gameId);
+    public Task<Result> CreateReviewAsync(CreateReviewDTO review);
+    public Task<Result<List<ReviewResponseDTO>>> GetAllGameReviewsAsync(int gameId);
 }

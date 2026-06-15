@@ -4,4 +4,5 @@ public class ReviewErrors
 {
     public static readonly Error ReviewNotFound = new("Requested review not found");
     public static readonly Error NoReviewsForTheGame = new("There are no reviews for the requested game");
+    public static readonly Error FailedToCreateReview = new("Failed to create review");
 }

@@ -9,7 +9,6 @@ namespace GamesPlatform.Application.Persistance;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser> 
 {
-    
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<DomainGame> Games { get; set; }
     public DbSet<Review> Reviews { get; set; }

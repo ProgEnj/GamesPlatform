@@ -26,12 +26,14 @@ public class UserProfileService(ApplicationDbContext _context, UserManager<Appli
    
    public async Task<Result<UserProfile>> GetProfileByUserNameAsync(string userName)
    {
-      var user = await _userManager.FindByNameAsync(userName);
+      var user = await _context.Users
+         .Include(users => users.UserProfile)
+         .FirstOrDefaultAsync(x => x.UserName == userName);
       
       if (user == null) 
          return Result.Failure<UserProfile>(AuthenticationErrors.UserNotFound);
 
-      var profile = await _context.UserProfiles.FirstOrDefaultAsync(x => x.Id == user.Id);
+      var profile = user.UserProfile;
       
       return profile == null ? 
          Result.Failure<UserProfile>(UserProfileErrors.UserProfileNotFound) : profile;
