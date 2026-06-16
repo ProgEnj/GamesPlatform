@@ -29,12 +29,11 @@ public class ReviewController(IReviewService _reviewService) : ControllerBase
         return result.IsSuccess ? Created() :  StatusCode(500, result.Error.Message);
     }
     
-    //TODO: make uri not by id but by game name
     //TODO: pagination
-    [HttpGet("{id}/reviews")]
-    public async Task<IActionResult> GetAllGameReivews(int id)
+    [HttpGet("{gameId}/reviews")]
+    public async Task<IActionResult> GetAllGameReivews(int gameId)
     {
-        var reviews = await _reviewService.GetAllGameReviewsAsync(id);
+        var reviews = await _reviewService.GetAllGameReviewsAsync(gameId);
 
         return reviews.IsSuccess ? Ok(reviews.Value) : Ok(reviews.Error.Message);
     }

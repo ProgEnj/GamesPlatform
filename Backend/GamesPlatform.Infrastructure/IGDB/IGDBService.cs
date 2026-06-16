@@ -82,7 +82,7 @@ public class IGDBService : IIGDBService
         this.TokenExpires = DateTime.Now.AddSeconds(authData.ExpiresIn);
     }
     
-    public async Task<Result<IGDBGame>> GetGameAsync(int id)
+    public async Task<Result<IGDBGame>> GetGameByIdAsync(int id)
     {
         var result = (await this.SendRequestAsync<IGDBGame>("/v4/games", gameQueryFields + $"where id = {id};")).FirstOrDefault();
 
