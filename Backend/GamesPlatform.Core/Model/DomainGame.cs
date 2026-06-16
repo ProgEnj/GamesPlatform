@@ -4,6 +4,7 @@ public class DomainGame
 {
     public string Id { get; set; }
     public int IGDBid { get; set; }
+    public string UriName { get; set; }
     
     // TODO: IGDBGame to domain model
     // Adding IGDBGame model to domain model requires a lot of effort now
@@ -24,9 +25,10 @@ public class DomainGame
    
     protected DomainGame() {}
         
-    public DomainGame(int igdbId)
+    public DomainGame(int igdbId, string uriName)
     {
         Id = Guid.NewGuid().ToString();
         IGDBid = igdbId;
+        UriName = uriName;
     }
 }

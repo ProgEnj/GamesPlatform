@@ -4,6 +4,7 @@ public class IGDBGame
 {
    public int id { get; set; }
    public string name { get; set; }
+   public string uriName { get; set; }
    public List<IGDBAlternativeName> alternative_names { get; set; }
    public string? version_title { get; set; }
    public IGDBImage cover { get; set; }

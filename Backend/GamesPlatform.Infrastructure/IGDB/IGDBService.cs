@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using GamesPlatform.Application.ErrorHandling;
 using GamesPlatform.Application.ErrorHandling.Errors;
+using GamesPlatform.Core.Helpers;
 using GamesPlatform.Infrastructure.IGDB.DTOs;
 using GamesPlatform.Infrastructure.IGDB.Models;
 using Microsoft.Extensions.Configuration;
@@ -91,6 +92,7 @@ public class IGDBService : IIGDBService
             return Result.Failure<IGDBGame>(IGDBErrors.GameNotFound);
         }
 
+        result.uriName = KebabCaseTransform.ToKebabCase(result.name);
         return Result.Success(result);
     }
     

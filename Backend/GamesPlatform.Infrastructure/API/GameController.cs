@@ -1,3 +1,4 @@
+using GamesPlatform.Application.Features.Game.DTOs;
 using GamesPlatform.Application.Features.Game.Interfaces;
 using GamesPlatform.Infrastructure.IGDB;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,10 @@ namespace GamesPlatform.Infrastructure.API;
 public class GamesController(IIGDBService _igdbGameService, IGameService _gameService) : ControllerBase
 {
     //TODO: make uri not by id but by game name
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetGameById(int id)
+    [HttpGet("id")]
+    public async Task<IActionResult> GetGameById([FromQuery] int gameId)
     {
-        var result = await _igdbGameService.GetGameByIdAsync(id);
+        var result = await _igdbGameService.GetGameByIdAsync(gameId);
         
         // This will be here for some time
         // Cause it's easier to put it in this 'gateway' place
@@ -28,7 +29,15 @@ public class GamesController(IIGDBService _igdbGameService, IGameService _gameSe
         //    IGDBService, to save game with name in db
         
         
-        await _gameService.CreateGameAsync(id);
+        await _gameService.CreateGameAsync(new CreateDomainGameDTO(result.Value.id, result.Value.name));
         return Ok(result);
+    }
+
+    [HttpGet("{uriName}")]
+    public async Task<IActionResult> GetGameByUriName(string uriName)
+    {
+        var domainGame = await _gameService.GetGameByUriName(uriName);
+        var result = await _igdbGameService.GetGameByIdAsync(domainGame.Value.IGDBid);
+        return Ok(result.Value);
     }
 }
