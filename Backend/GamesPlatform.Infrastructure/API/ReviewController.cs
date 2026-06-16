@@ -9,7 +9,7 @@ namespace GamesPlatform.Infrastructure.API;
 
 [ApiController]
 [Route("[controller]")]
-public class ReviewController(IReviewService _reviewService) : ControllerBase
+public class ReviewsController(IReviewService _reviewService) : ControllerBase
 {
     [HttpGet("{id}")]
     public async Task GetReviewById(int id)

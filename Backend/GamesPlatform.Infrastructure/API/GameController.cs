@@ -6,7 +6,7 @@ namespace GamesPlatform.Infrastructure.API;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController(IIGDBService _igdbGameService, IGameService _gameService) : ControllerBase
+public class GamesController(IIGDBService _igdbGameService, IGameService _gameService) : ControllerBase
 {
     //TODO: make uri not by id but by game name
     [HttpGet("{id}")]
@@ -14,7 +14,7 @@ public class GameController(IIGDBService _igdbGameService, IGameService _gameSer
     {
         var result = await _igdbGameService.GetGameByIdAsync(id);
         
-        // This will be here for some time cause
+        // This will be here for some time
         // Cause it's easier to put it in this 'gateway' place
         // than to add in every post, need to remove later of course
         
@@ -23,7 +23,7 @@ public class GameController(IIGDBService _igdbGameService, IGameService _gameSer
         //    compares it to name from igdb, we still return igdbId to front
         //    Example "The Witcher 3: Wild Hunt" -> "the-witcher-3-wild-hunt"
         // 2. New method in IGDB service that returns game by name.
-        //    Method will use helper funciton 
+        //    Method will use helper funciton
         // 3. CreateDomainGameDTO with igdbId and primaryName that we get from
         //    IGDBService, to save game with name in db
         
