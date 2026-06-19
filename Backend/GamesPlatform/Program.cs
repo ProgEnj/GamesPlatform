@@ -25,6 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql
 builder.Services.AddIdentity(configuration);
 builder.Services.AddAuthentication(configuration);
 builder.Services.AddAuthorization(configuration);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 builder.Services.AddEndpointsApiExplorer();
 // TODO: Separate extention method
