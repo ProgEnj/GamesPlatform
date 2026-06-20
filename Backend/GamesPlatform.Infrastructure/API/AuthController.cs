@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GamesPlatform.Infrastructure.API.Authentication
+namespace GamesPlatform.Infrastructure.API
 {
     [ApiController]
     [Route("[controller]")]
