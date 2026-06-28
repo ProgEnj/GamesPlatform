@@ -23,7 +23,7 @@ public class ReviewService(ApplicationDbContext _context,
         }
 
         return new ReviewResponseDTO(result.Id, result.Text, result.UpvoteCount,
-            result.Author.Id, result.Author.ProfileName, result.DownvoteCount, result.Comments);
+            result.Author.Id, result.Author.ProfileName, result.DownvoteCount);
     }
     
     public async Task<Result> CreateReviewAsync(CreateReviewDTO review)
@@ -47,7 +47,7 @@ public class ReviewService(ApplicationDbContext _context,
             .Include(review => review.Author)
             .Where(x => x.DomainGame.IGDBid == gameId)
             .Select(x => new ReviewResponseDTO(x.Id, x.Text, x.UpvoteCount, x.Author.Id, 
-                x.Author.ProfileName, x.DownvoteCount, x.Comments))
+                x.Author.ProfileName, x.DownvoteCount))
             .ToListAsync();
 
         if (reviews.Count() == 0)

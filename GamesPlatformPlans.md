@@ -31,6 +31,8 @@
 	- Technical stuff
 		- [ ] Migrate to CQRS with MediatR
 		- [ ] Deal with uuid's in urls
+	- Features
+		- [ ] Comment with some amount of upvotes shows automatically under review
 
 Additional features
 - Recommend unpopular/old games (called "blow")
