@@ -11,10 +11,12 @@ namespace GamesPlatform.Infrastructure.API;
 [Route("[controller]")]
 public class ReviewsController(IReviewService _reviewService) : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task GetReviewById(int id)
+    [HttpGet("{reviewId}")]
+    public async Task<IActionResult> GetReviewById(string id)
     {
-       // TODO: implement
+        var result = await _reviewService.GetReviewByIdAsync(id);
+        
+        return result.IsSuccess ? Ok(result.Value) : Ok(result.Error.Message);
     }
     
     [HttpPost("{gameId}/review")]

@@ -13,6 +13,19 @@ namespace GamesPlatform.Application.Features.Reviews.Implementation;
 public class ReviewService(ApplicationDbContext _context, 
     IUserProfileService _userProfileService, IGameService _gameService) : IReviewService
 {
+    public async Task<Result<ReviewResponseDTO>> GetReviewByIdAsync(string id)
+    {
+        var result = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result == null)
+        {
+            return Result.Failure<ReviewResponseDTO>(ReviewErrors.ReviewNotFound);
+        }
+
+        return new ReviewResponseDTO(result.Id, result.Text, result.UpvoteCount,
+            result.Author.Id, result.Author.ProfileName, result.DownvoteCount, result.Comments);
+    }
+    
     public async Task<Result> CreateReviewAsync(CreateReviewDTO review)
     {
         var userProifle = await _userProfileService.GetProfileByUserNameAsync(review.UserName);
@@ -29,7 +42,6 @@ public class ReviewService(ApplicationDbContext _context,
 
     public async Task<Result<List<ReviewResponseDTO>>> GetAllGameReviewsAsync(int gameId)
     {
-        // doing get game refactoring
         await _gameService.GetGameByIgdbIdAsync(gameId);
         var reviews = await _context.Reviews
             .Include(review => review.Author)
@@ -37,9 +49,11 @@ public class ReviewService(ApplicationDbContext _context,
             .Select(x => new ReviewResponseDTO(x.Id, x.Text, x.UpvoteCount, x.Author.Id, 
                 x.Author.ProfileName, x.DownvoteCount, x.Comments))
             .ToListAsync();
-        
+
         if (reviews.Count() == 0)
+        {
             return new Result<List<ReviewResponseDTO>>(new(), false, ReviewErrors.NoReviewsForTheGame);
+        }
 
         return reviews;
     }
