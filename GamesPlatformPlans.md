@@ -28,7 +28,9 @@
 		- [ ] Notifications
 			- New like
 			- New comment
-	
+	- Technical stuff
+		- [ ] Migrate to CQRS with MediatR
+		- [ ] Deal with uuid's in urls
 
 Additional features
 - Recommend unpopular/old games (called "blow")
