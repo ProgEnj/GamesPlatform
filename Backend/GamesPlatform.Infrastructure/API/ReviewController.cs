@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using GamesPlatform.Application.Features.Commets.DTOs;
+using GamesPlatform.Application.Features.Commets.Interfaces;
 using GamesPlatform.Application.Features.Game.Interfaces;
 using GamesPlatform.Application.Features.Reviews.DTOs;
 using GamesPlatform.Application.Features.Reviews.Interfaces;
@@ -9,7 +11,7 @@ namespace GamesPlatform.Infrastructure.API;
 
 [ApiController]
 [Route("[controller]")]
-public class ReviewsController(IReviewService _reviewService) : ControllerBase
+public class ReviewsController(IReviewService _reviewService, ICommentsService _commentsService) : ControllerBase
 {
     [HttpGet("{reviewId}")]
     public async Task<IActionResult> GetReviewById(string id)
@@ -24,8 +26,9 @@ public class ReviewsController(IReviewService _reviewService) : ControllerBase
     public async Task<IActionResult> PostReview([FromRoute] int gameId, [FromBody] string text)
     {
         // TODO: Maybe make some helper to extract claims from identity
-        var userName = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-        var reviewDTO = new CreateReviewDTO() { GameId = gameId, Text = text, UserName = userName.Value };
+        //  Also this looks kida hacky, maybe there is better solution for this
+        var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+        var reviewDTO = new CreateReviewDTO() { GameId = gameId, Text = text, UserName = userNameClaim.Value };
         
         var result = await _reviewService.CreateReviewAsync(reviewDTO);
         return result.IsSuccess ? Created() :  StatusCode(500, result.Error.Message);
@@ -38,5 +41,23 @@ public class ReviewsController(IReviewService _reviewService) : ControllerBase
         var reviews = await _reviewService.GetAllGameReviewsAsync(gameId);
 
         return reviews.IsSuccess ? Ok(reviews.Value) : Ok(reviews.Error.Message);
+    }
+    
+    [HttpGet("{reviewId}/comments")]
+    public async Task<IActionResult> GetReviewComments([FromRoute] string reviewId, [FromQuery] int skip, [FromQuery] int top)
+    {
+        var result = await _commentsService.GetReviewCommentsAsync(reviewId, skip, top);
+        return result.IsSuccess ? Ok(result.Value) : Ok(result.Error.Message);
+    }
+
+    [HttpPost("{reviewId}/comment")]
+    [Authorize]
+    public async Task<IActionResult> GetReviewComments([FromRoute] string reviewId, CreateCommentRequestDTO createDto)
+    {
+        var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+        createDto.AuthorName = userNameClaim.Value;
+        var result = await _commentsService.CreateCommentForReviewAsync(reviewId, createDto);
+        
+        return result.IsSuccess ? Created() : StatusCode(500, result.Error.Message);
     }
 }

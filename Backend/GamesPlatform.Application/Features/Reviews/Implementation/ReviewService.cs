@@ -26,6 +26,31 @@ public class ReviewService(ApplicationDbContext _context,
             result.Author.Id, result.Author.ProfileName, result.DownvoteCount);
     }
     
+    public async Task<Result<Review>> GetDomainReviewByIdAsync(string id)
+    {
+        var result = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result == null)
+        {
+            return Result.Failure<Review>(ReviewErrors.ReviewNotFound);
+        }
+
+        return result;
+    }
+    
+    public async Task<Result<ReviewResponseDTO>> GetDomainByIdAsync(string id)
+    {
+        var result = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result == null)
+        {
+            return Result.Failure<ReviewResponseDTO>(ReviewErrors.ReviewNotFound);
+        }
+
+        return new ReviewResponseDTO(result.Id, result.Text, result.UpvoteCount,
+            result.Author.Id, result.Author.ProfileName, result.DownvoteCount);
+    }
+    
     public async Task<Result> CreateReviewAsync(CreateReviewDTO review)
     {
         var userProifle = await _userProfileService.GetProfileByUserNameAsync(review.UserName);
