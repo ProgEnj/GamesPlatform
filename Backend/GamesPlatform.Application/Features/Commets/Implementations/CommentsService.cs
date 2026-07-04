@@ -41,7 +41,6 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
         }
         
         _context.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review.Value));
-        await _context.SaveChangesAsync();
         
         if ((await _context.SaveChangesAsync()) != 1)
         {

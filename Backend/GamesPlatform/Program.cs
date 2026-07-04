@@ -1,3 +1,5 @@
+using GamesPlatform.Application.Features.Commets;
+using GamesPlatform.Application.Features.Commets.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using GamesPlatform.Infrastructure.Authentication;
@@ -51,6 +53,7 @@ builder.Services.AddScoped<IEmailSender<ApplicationUser>, EmailSenderDummy>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddSingleton<IIGDBService, IGDBService>();
 
 builder.Services.AddHealthChecks()
