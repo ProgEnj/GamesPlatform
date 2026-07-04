@@ -14,9 +14,9 @@ namespace GamesPlatform.Infrastructure.API;
 public class ReviewsController(IReviewService _reviewService, ICommentsService _commentsService) : ControllerBase
 {
     [HttpGet("{reviewId}")]
-    public async Task<IActionResult> GetReviewById(string id)
+    public async Task<IActionResult> GetReviewById(string reviewId)
     {
-        var result = await _reviewService.GetReviewByIdAsync(id);
+        var result = await _reviewService.GetReviewByIdAsync(reviewId);
         
         return result.IsSuccess ? Ok(result.Value) : Ok(result.Error.Message);
     }
