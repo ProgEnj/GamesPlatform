@@ -21,7 +21,6 @@ public static class ConfigureExtension
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            
             .AddDefaultTokenProviders();
     }
 
