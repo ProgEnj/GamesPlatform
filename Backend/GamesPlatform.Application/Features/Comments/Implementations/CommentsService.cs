@@ -1,14 +1,14 @@
 using GamesPlatform.Application.ErrorHandling;
 using GamesPlatform.Application.ErrorHandling.Errors;
-using GamesPlatform.Application.Features.Commets.DTOs;
-using GamesPlatform.Application.Features.Commets.Interfaces;
+using GamesPlatform.Application.Features.Comments.DTOs;
+using GamesPlatform.Application.Features.Comments.Interfaces;
 using GamesPlatform.Application.Features.Profile.Interfaces;
 using GamesPlatform.Application.Features.Reviews.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Core.Model.Reviews;
 using Microsoft.EntityFrameworkCore;
 
-namespace GamesPlatform.Application.Features.Commets;
+namespace GamesPlatform.Application.Features.Comments.Implementations;
 
 public class CommentsService(ApplicationDbContext _context, IReviewService _reviewService, IUserProfileService _userProfileService) : ICommentsService
 {

@@ -1,7 +1,6 @@
 using System.Security.Claims;
-using GamesPlatform.Application.Features.Commets.DTOs;
-using GamesPlatform.Application.Features.Commets.Interfaces;
-using GamesPlatform.Application.Features.Game.Interfaces;
+using GamesPlatform.Application.Features.Comments.DTOs;
+using GamesPlatform.Application.Features.Comments.Interfaces;
 using GamesPlatform.Application.Features.Reviews.DTOs;
 using GamesPlatform.Application.Features.Reviews.Interfaces;
 using Microsoft.AspNetCore.Authorization;

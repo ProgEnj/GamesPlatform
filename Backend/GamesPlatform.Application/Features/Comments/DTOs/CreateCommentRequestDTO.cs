@@ -1,4 +1,4 @@
-namespace GamesPlatform.Application.Features.Commets.DTOs;
+namespace GamesPlatform.Application.Features.Comments.DTOs;
 
 public class CreateCommentRequestDTO
 {

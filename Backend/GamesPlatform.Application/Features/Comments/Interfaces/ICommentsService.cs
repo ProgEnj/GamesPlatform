@@ -1,7 +1,7 @@
 using GamesPlatform.Application.ErrorHandling;
-using GamesPlatform.Application.Features.Commets.DTOs;
+using GamesPlatform.Application.Features.Comments.DTOs;
 
-namespace GamesPlatform.Application.Features.Commets.Interfaces;
+namespace GamesPlatform.Application.Features.Comments.Interfaces;
 
 public interface ICommentsService
 {

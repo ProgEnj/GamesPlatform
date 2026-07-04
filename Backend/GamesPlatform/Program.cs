@@ -1,5 +1,3 @@
-using GamesPlatform.Application.Features.Commets;
-using GamesPlatform.Application.Features.Commets.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using GamesPlatform.Infrastructure.Authentication;
@@ -13,6 +11,8 @@ using GamesPlatform.Application.Features.Profile.Implementation;
 using GamesPlatform.Application.Features.Profile.Interfaces;
 using GamesPlatform.Application.Features.Reviews.Implementation;
 using GamesPlatform.Application.Features.Reviews.Interfaces;
+using GamesPlatform.Application.Features.Comments.Implementations;
+using GamesPlatform.Application.Features.Comments.Interfaces;
 using GamesPlatform.Application.Persistance;
 using GamesPlatform.Application.Persistance.Identity;
 using Microsoft.AspNetCore.Identity;
