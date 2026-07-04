@@ -31,6 +31,7 @@
 	- Technical stuff
 		- [ ] Migrate to CQRS with MediatR
 		- [ ] Deal with uuid's in urls
+        - [ ] Middleware or something else to retrieve user identity from request
 	- Features
 		- [ ] Comment with some amount of upvotes shows automatically under review
 
