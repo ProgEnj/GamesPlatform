@@ -10,15 +10,17 @@ public class Comment
     public int DownvoteCount { get; set; }
     public UserProfile Author { get; set; }
     public Review Review { get; set; }
+    public Comment? ReplyTo { get; set; }
     public List<Comment>? Comments { get; set; }
     
     protected Comment(){}
     
-    public Comment(string text, UserProfile author, Review review)
+    public Comment(string text, UserProfile author, Review review, Comment replyTo = null)
     {
         Id = Guid.NewGuid().ToString();
         Text = text;
         Author = author;
         Review = review;
+        ReplyTo = replyTo;
     }
 }

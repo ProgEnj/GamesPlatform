@@ -51,7 +51,19 @@ public class ReviewsController(IReviewService _reviewService, ICommentsService _
 
     [HttpPost("{reviewId}/comment")]
     [Authorize]
-    public async Task<IActionResult> GetReviewComments([FromRoute] string reviewId, CreateCommentRequestDTO createDto)
+    public async Task<IActionResult> CreateCommentToReview([FromRoute] string reviewId, CreateCommentRequestDTO createDto)
+    {
+        var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+        createDto.AuthorName = userNameClaim.Value;
+        var result = await _commentsService.CreateCommentForReviewAsync(reviewId, createDto);
+        
+        return result.IsSuccess ? Created() : StatusCode(500, result.Error.Message);
+    }
+    
+    [HttpPost("{reviewId}/{commentId}")]
+    [Authorize]
+    public async Task<IActionResult> CreateReplyToComment([FromRoute] string reviewId, [FromRoute] string commentId, 
+        CreateCommentRequestDTO createDto)
     {
         var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
         createDto.AuthorName = userNameClaim.Value;

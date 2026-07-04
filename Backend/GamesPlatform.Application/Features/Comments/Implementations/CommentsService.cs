@@ -49,4 +49,25 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
 
         return Result.Success();
     }
+
+    public async Task<Result> CreateReplyToCommentAsync(string reviewId, CreateCommentRequestDTO createDTO)
+    {
+        var review = await _reviewService.GetDomainReviewByIdAsync(reviewId);
+        var userProfile = await _userProfileService.GetProfileByUserNameAsync(createDTO.AuthorName);
+        var replyToComment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == createDTO.ReplyTo);
+
+        if (!review.IsSuccess || !userProfile.IsSuccess || replyToComment != null)
+        {
+            return Result.Failure(CommentsErrors.InvalidUserOrReview);
+        }
+        
+        _context.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review.Value, replyToComment));
+        
+        if ((await _context.SaveChangesAsync()) != 1)
+        {
+            return Result.Failure(CommentsErrors.FailedToCreateReply);
+        }
+
+        return Result.Success();
+    }
 }
