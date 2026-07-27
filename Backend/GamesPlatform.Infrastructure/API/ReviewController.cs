@@ -67,7 +67,9 @@ public class ReviewsController(IReviewService _reviewService, ICommentsService _
     {
         var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
         createDto.AuthorName = userNameClaim.Value;
-        var result = await _commentsService.CreateCommentForReviewAsync(reviewId, createDto);
+        createDto.ReplyTo = commentId;
+        
+        var result = await _commentsService.CreateReplyToCommentAsync(reviewId, createDto);
         
         return result.IsSuccess ? Created() : StatusCode(500, result.Error.Message);
     }

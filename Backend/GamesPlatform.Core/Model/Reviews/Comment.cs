@@ -11,11 +11,11 @@ public class Comment
     public UserProfile Author { get; set; }
     public Review Review { get; set; }
     public Comment? ReplyTo { get; set; }
-    public List<Comment>? Comments { get; set; }
+    public List<Comment> Comments { get; set; } = new List<Comment>();
     
     protected Comment(){}
     
-    public Comment(string text, UserProfile author, Review review, Comment replyTo = null)
+    public Comment(string text, UserProfile author, Review review, Comment? replyTo = null)
     {
         Id = Guid.NewGuid().ToString();
         Text = text;

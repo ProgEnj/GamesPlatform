@@ -14,12 +14,13 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
 {
     public async Task<Result<List<CommentResponseDTO>>> GetReviewCommentsAsync(string reviewId, int skip, int top)
     {
+        // Find a way to manage self one to many relationship
         var comments = await _context.Comments
-            .Where(x => x.Review.Id == reviewId)
+            .Where(x => x.Review.Id == reviewId && x.ReplyTo == null)
             .Skip(skip)
             .Take(top)
             .Select(comment => new CommentResponseDTO(comment.Id, comment.Text,
-                comment.UpvoteCount, comment.DownvoteCount))
+                comment.UpvoteCount, comment.DownvoteCount, comment.Comments))
             .ToListAsync();
         
         if (comments.Count() == 0)
@@ -56,12 +57,12 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
         var userProfile = await _userProfileService.GetProfileByUserNameAsync(createDTO.AuthorName);
         var replyToComment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == createDTO.ReplyTo);
 
-        if (!review.IsSuccess || !userProfile.IsSuccess || replyToComment != null)
+        if (!review.IsSuccess || !userProfile.IsSuccess || replyToComment == null)
         {
             return Result.Failure(CommentsErrors.InvalidUserOrReview);
         }
         
-        _context.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review.Value, replyToComment));
+        replyToComment.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review.Value, replyToComment));
         
         if ((await _context.SaveChangesAsync()) != 1)
         {
