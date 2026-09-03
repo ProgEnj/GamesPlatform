@@ -1,13 +1,17 @@
+using System.Security.Claims;
 using GamesPlatform.Application.Features.Game.DTOs;
 using GamesPlatform.Application.Features.Game.Interfaces;
+using GamesPlatform.Application.Features.Reviews.DTOs;
+using GamesPlatform.Application.Features.Reviews.Interfaces;
 using GamesPlatform.Infrastructure.IGDB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamesPlatform.Infrastructure.API;
 
 [ApiController]
 [Route("[controller]")]
-public class GamesController(IIGDBService _igdbGameService, IGameService _gameService) : ControllerBase
+public class GamesController(IIGDBService _igdbGameService, IGameService _gameService, IReviewService _reviewService) : ControllerBase
 {
     //TODO: make uri not by id but by game name
     [HttpGet("id")]
@@ -39,5 +43,27 @@ public class GamesController(IIGDBService _igdbGameService, IGameService _gameSe
         var domainGame = await _gameService.GetGameByUriName(uriName);
         var result = await _igdbGameService.GetGameByIdAsync(domainGame.Value.IGDBid);
         return Ok(result.Value);
+    }
+    
+    //TODO: pagination
+    [HttpGet("{gameId}/reviews")]
+    public async Task<IActionResult> GetAllGameReivews(int gameId)
+    {
+        var reviews = await _reviewService.GetAllGameReviewsAsync(gameId);
+
+        return reviews.IsSuccess ? Ok(reviews.Value) : Ok(reviews.Error.Message);
+    }
+    
+    [HttpPost("{gameId}/review")]
+    [Authorize]
+    public async Task<IActionResult> PostReview([FromRoute] int gameId, [FromBody] string text)
+    {
+        // TODO: Maybe make some helper to extract claims from identity
+        //  Also this looks kida hacky, maybe there is better solution for this
+        var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+        var reviewDTO = new CreateReviewDTO() { GameId = gameId, Text = text, UserName = userNameClaim.Value };
+        
+        var result = await _reviewService.CreateReviewAsync(reviewDTO);
+        return result.IsSuccess ? Created() :  StatusCode(500, result.Error.Message);
     }
 }
