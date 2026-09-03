@@ -63,7 +63,7 @@ public class ReviewsController(IReviewService _reviewService, ICommentsService _
     [HttpPost("{reviewId}/{commentId}")]
     [Authorize]
     public async Task<IActionResult> CreateReplyToComment([FromRoute] string reviewId, [FromRoute] string commentId, 
-        CreateCommentRequestDTO createDto)
+        CreateReplyRequestDTO createDto)
     {
         var userNameClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
         createDto.AuthorName = userNameClaim.Value;

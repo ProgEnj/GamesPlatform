@@ -7,5 +7,5 @@ public interface ICommentsService
 {
     public Task<Result<List<CommentResponseDTO>>> GetReviewCommentsAsync(string reviewId, int skip, int top);
     public Task<Result> CreateCommentForReviewAsync(string reviewId, CreateCommentRequestDTO createDTO);
-    public Task<Result> CreateReplyToCommentAsync(string reviewId, CreateCommentRequestDTO createDTO);
+    public Task<Result> CreateReplyToCommentAsync(string reviewId, CreateReplyRequestDTO createDTO);
 }

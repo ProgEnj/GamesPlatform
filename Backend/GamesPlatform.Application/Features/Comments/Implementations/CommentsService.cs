@@ -31,6 +31,9 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
         return comments;
     }
 
+    // TODO: Trying to solve another problem now,
+    //  Comments can only be created by autheticated users,
+    //  so better practice will be to extract identity from JWT token
     public async Task<Result> CreateCommentForReviewAsync(string reviewId, CreateCommentRequestDTO createDTO)
     {
         var review = await _reviewService.GetDomainReviewByIdAsync(reviewId);
@@ -51,7 +54,7 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
         return Result.Success();
     }
 
-    public async Task<Result> CreateReplyToCommentAsync(string reviewId, CreateCommentRequestDTO createDTO)
+    public async Task<Result> CreateReplyToCommentAsync(string reviewId, CreateReplyRequestDTO createDTO)
     {
         var review = await _reviewService.GetDomainReviewByIdAsync(reviewId);
         var userProfile = await _userProfileService.GetProfileByUserNameAsync(createDTO.AuthorName);
