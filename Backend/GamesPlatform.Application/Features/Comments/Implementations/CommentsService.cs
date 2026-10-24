@@ -19,8 +19,13 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
             .Where(x => x.Review.Id == reviewId && x.ReplyTo == null)
             .Skip(skip)
             .Take(top)
-            .Select(comment => new CommentResponseDTO(comment.Id, comment.Text,
-                comment.UpvoteCount, comment.DownvoteCount, comment.Comments))
+            // TODO: This is bad, a very hacky way to include just a author name
+            //  for the purposes of good api, i should split this into 2 separate processed
+            //  and design the api it around it
+            .Include(originalComments => originalComments.Comments)
+            .ThenInclude(repliesToOriginal => repliesToOriginal.Author)
+            .Select(comment => new CommentResponseDTO(comment.Id, comment.Text, 
+                comment.Author.ProfileName, comment.UpvoteCount, comment.DownvoteCount, comment.Comments))
             .ToListAsync();
         
         if (comments.Count() == 0)
