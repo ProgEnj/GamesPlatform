@@ -15,15 +15,17 @@ public class ReviewsController(IReviewService _reviewService, ICommentsService _
     public async Task<IActionResult> GetReviewById(string reviewId)
     {
         var result = await _reviewService.GetReviewByIdAsync(reviewId);
-        
+
         return result.IsSuccess ? Ok(result.Value) : Ok(result.Error.Message);
     }
-    
-    
+
+
     [HttpGet("{reviewId}/comments")]
-    public async Task<IActionResult> GetReviewComments([FromRoute] string reviewId, [FromQuery] int skip, [FromQuery] int top)
-    {
-        var result = await _commentsService.GetReviewCommentsAsync(reviewId, skip, top);
+    public async Task<IActionResult> GetReviewComments([FromRoute] string reviewId, [FromQuery] int skip,
+        [FromQuery] int top, [FromQuery] int depth)
+
+{
+        var result = await _commentsService.GetReviewCommentsAsync(reviewId, skip, top, depth);
         return result.IsSuccess ? Ok(result.Value) : Ok(result.Error.Message);
     }
 

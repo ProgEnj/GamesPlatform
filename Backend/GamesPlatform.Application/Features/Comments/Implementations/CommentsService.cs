@@ -10,32 +10,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GamesPlatform.Application.Features.Comments.Implementations;
 
-public class CommentsService(ApplicationDbContext _context, IReviewService _reviewService, IUserProfileService _userProfileService) : ICommentsService
+public class CommentsService(ApplicationDbContext _context, IUserProfileService _userProfileService) : ICommentsService
 {
-    public async Task<Result<List<CommentResponseDTO>>> GetReviewCommentsAsync(string reviewId, int skip, int top)
+    // This method will get depth parameter
+    // I'll also create new method for geting tree of comments starting with specific comment
+    public async Task<Result<List<CommentResponseDTO>>> GetReviewCommentsAsync(string reviewId, int skip, int top, int depth)
     {
-        // Find a way to manage self one to many relationship
+        var review = await _context.Reviews.FirstOrDefaultAsync(review => review.Id == reviewId);
+        
+        if (review == null)
+            return new Result<List<CommentResponseDTO>>(new(), false, ReviewErrors.ReviewNotFound);
+        
         var comments = await _context.Comments
             .Where(x => x.Review.Id == reviewId && x.ReplyTo == null)
             .Skip(skip)
             .Take(top)
-            // TODO: This is bad, a very hacky way to include just a author name
-            //  for the purposes of good api, i should split this into 2 separate processed
-            //  and design the api it around it
-            .Include(originalComments => originalComments.Comments)
-            .ThenInclude(repliesToOriginal => repliesToOriginal.Author)
             .Select(comment => new CommentResponseDTO(comment.Id, comment.Text, 
-                comment.Author.ProfileName, comment.UpvoteCount, comment.DownvoteCount, comment.Comments))
+                comment.Author.ProfileName, comment.UpvoteCount, comment.DownvoteCount, null))
             .ToListAsync();
         
         if (comments.Count() == 0)
-        {
             return new Result<List<CommentResponseDTO>>(new(), false, CommentsErrors.NoCommetsForReview);
-        }
 
         return comments;
     }
-
+    
     // TODO: Trying to solve another problem now,
     //  Comments can only be created by autheticated users,
     //  so better practice will be to extract identity from JWT token
