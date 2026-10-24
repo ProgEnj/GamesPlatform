@@ -36,15 +36,15 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
     //  so better practice will be to extract identity from JWT token
     public async Task<Result> CreateCommentForReviewAsync(string reviewId, CreateCommentRequestDTO createDTO)
     {
-        var review = await _reviewService.GetDomainReviewByIdAsync(reviewId);
+        var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == reviewId);
         var userProfile = await _userProfileService.GetProfileByUserNameAsync(createDTO.AuthorName);
 
-        if (!review.IsSuccess || !userProfile.IsSuccess)
+        if (review == null || !userProfile.IsSuccess)
         {
             return Result.Failure(CommentsErrors.InvalidUserOrReview);
         }
         
-        _context.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review.Value));
+        _context.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review));
         
         if ((await _context.SaveChangesAsync()) != 1)
         {
@@ -56,16 +56,16 @@ public class CommentsService(ApplicationDbContext _context, IReviewService _revi
 
     public async Task<Result> CreateReplyToCommentAsync(string reviewId, CreateReplyRequestDTO createDTO)
     {
-        var review = await _reviewService.GetDomainReviewByIdAsync(reviewId);
+        var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == reviewId);
         var userProfile = await _userProfileService.GetProfileByUserNameAsync(createDTO.AuthorName);
         var replyToComment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == createDTO.ReplyTo);
 
-        if (!review.IsSuccess || !userProfile.IsSuccess || replyToComment == null)
+        if (review == null || !userProfile.IsSuccess || replyToComment == null)
         {
             return Result.Failure(CommentsErrors.InvalidUserOrReview);
         }
         
-        replyToComment.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review.Value, replyToComment));
+        replyToComment.Comments.Add(new Comment(createDTO.Text, userProfile.Value, review, replyToComment));
         
         if ((await _context.SaveChangesAsync()) != 1)
         {
